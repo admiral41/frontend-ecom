@@ -1,13 +1,31 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { assets } from "@/assets/assets";
 import { useAppContext } from "@/context/AppContext";
 import { menuData } from "@/data/menuData";
+import { getNavData } from "@/api/api";
+
 
 const Navbar = () => {
-  const { router } = useAppContext();
+  const { isSeller, router } = useAppContext();
+
+  const [navData, setNavData] = useState([]);
+  useEffect(() => {
+    getAllNavData();
+  }, []);
+
+  const getAllNavData = async () => {
+    try {
+      const res = await getNavData();
+      console.log("Res is ", res.data.data)
+      setNavData(res.data.data)
+    } catch (error) {
+
+    }
+  }
+
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [expandedMenuIndex, setExpandedMenuIndex] = useState(null);
@@ -17,10 +35,10 @@ const Navbar = () => {
   const toggleExpandedMenu = (index) => {
     if (expandedMenuIndex === index) {
       setExpandedMenuIndex(null);
-      setExpandedCategoryIndex(null); 
+      setExpandedCategoryIndex(null);
     } else {
       setExpandedMenuIndex(index);
-      setExpandedCategoryIndex(null); 
+      setExpandedCategoryIndex(null);
     }
   };
 
@@ -32,6 +50,7 @@ const Navbar = () => {
       setExpandedCategoryIndex(index);
     }
   };
+
 
   return (
     <nav className="flex items-center mb-4 justify-between px-6 md:px-16 lg:px-32 border-b border-gray-300 text-gray-700 sticky top-0 z-50 bg-white">
@@ -45,7 +64,7 @@ const Navbar = () => {
 
       {/* Desktop Menu */}
       <div className="flex items-center gap-10 max-md:hidden">
-        {menuData.map((menu) => (
+        {navData.map((menu) => (
           <div key={menu.title} className="relative group">
             <button className="hover:text-black text-lg transition">
               {menu.title}
@@ -79,6 +98,7 @@ const Navbar = () => {
         ))}
       </div>
 
+
       {/* Desktop Right Icons */}
       <ul className="hidden md:flex items-center gap-6">
         <Image
@@ -86,6 +106,7 @@ const Navbar = () => {
           src={assets.search_icon}
           alt="search icon"
         />
+        {isSeller && <button onClick={() => router.push('/seller')} className="text-xs border px-4 py-1.5 rounded-full">Seller Dashboard</button>}
         <button className="flex items-center gap-2 hover:text-gray-900 transition text-sm font-medium">
           <Image src={assets.user_icon} alt="user icon" />
           Account
@@ -99,26 +120,23 @@ const Navbar = () => {
         aria-label="Toggle menu"
       >
         <span
-          className={`block h-0.5 w-6 bg-gray-700 transition-transform duration-300 ${
-            mobileMenuOpen ? "rotate-45 translate-y-1.5" : ""
-          }`}
+          className={`block h-0.5 w-6 bg-gray-700 transition-transform duration-300 ${mobileMenuOpen ? "rotate-45 translate-y-1.5" : ""
+            }`}
         />
         <span
-          className={`block h-0.5 w-6 bg-gray-700 transition-opacity duration-300 ${
-            mobileMenuOpen ? "opacity-0" : "opacity-100"
-          }`}
+          className={`block h-0.5 w-6 bg-gray-700 transition-opacity duration-300 ${mobileMenuOpen ? "opacity-0" : "opacity-100"
+            }`}
         />
         <span
-          className={`block h-0.5 w-6 bg-gray-700 transition-transform duration-300 ${
-            mobileMenuOpen ? "-rotate-45 -translate-y-1.5" : ""
-          }`}
+          className={`block h-0.5 w-6 bg-gray-700 transition-transform duration-300 ${mobileMenuOpen ? "-rotate-45 -translate-y-1.5" : ""
+            }`}
         />
       </button>
 
       {mobileMenuOpen && (
         <div className="absolute top-full left-0 right-0 bg-white border-t border-gray-300 shadow-md md:hidden z-40 overflow-hidden">
           <ul className="flex flex-col p-4 space-y-4">
-            {menuData.map((menu, menuIndex) => (
+            {navData.map((menu, menuIndex) => (
               <li key={menu.title}>
                 {/* Menu Title */}
                 <button
@@ -133,9 +151,8 @@ const Navbar = () => {
 
                 {/* Categories - show only if menu is expanded with animation */}
                 <div
-                  className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                    expandedMenuIndex === menuIndex ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
-                  }`}
+                  className={`overflow-hidden transition-all duration-300 ease-in-out ${expandedMenuIndex === menuIndex ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+                    }`}
                 >
                   <ul className="mt-2 pl-4 border-l border-gray-300 space-y-2">
                     {menu.categories.map((category, catIndex) => (
@@ -153,9 +170,8 @@ const Navbar = () => {
 
                         {/* Subcategories - show only if category expanded with animation */}
                         <div
-                          className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                            expandedCategoryIndex === catIndex ? "max-h-40 opacity-100" : "max-h-0 opacity-0"
-                          }`}
+                          className={`overflow-hidden transition-all duration-300 ease-in-out ${expandedCategoryIndex === catIndex ? "max-h-40 opacity-100" : "max-h-0 opacity-0"
+                            }`}
                         >
                           <ul className="mt-1 pl-4 space-y-1 text-sm text-gray-700">
                             {category.subcategories.map((sub) => (
