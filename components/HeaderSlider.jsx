@@ -11,7 +11,7 @@ const HeaderSlider = () => {
   useEffect(() => {
     const fetchSliders = async () => {
       try {
-        const response = await fetch("http://localhost:5070/api/sliders");
+        const response = await fetch("https://backend-ecom-tzp2.onrender.com/api/sliders");
         if (!response.ok) {
           throw new Error("Failed to fetch slider data");
         }

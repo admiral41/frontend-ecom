@@ -24,7 +24,7 @@ const BannerManagement = () => {
 
   const fetchBanners = async () => {
     try {
-      const response = await fetch("http://localhost:5070/api/sliders");
+      const response = await fetch("https://backend-ecom-tzp2.onrender.com/api/sliders");
       if (!response.ok) throw new Error("Failed to fetch banners");
       const data = await response.json();
       setBanners(data);
@@ -114,8 +114,8 @@ const BannerManagement = () => {
 
     try {
       const url = editingId 
-        ? `http://localhost:5070/api/sliders/${editingId}`
-        : "http://localhost:5070/api/sliders";
+        ? `https://backend-ecom-tzp2.onrender.com/api/sliders/${editingId}`
+        : "https://backend-ecom-tzp2.onrender.com/api/sliders";
       
       const method = editingId ? 'PATCH' : 'POST';
 
@@ -147,7 +147,7 @@ const BannerManagement = () => {
     if (!window.confirm("Are you sure you want to delete this banner?")) return;
     
     try {
-      const response = await fetch(`http://localhost:5070/api/sliders/${id}`, {
+      const response = await fetch(`https://backend-ecom-tzp2.onrender.com/api/sliders/${id}`, {
         method: 'DELETE'
       });
 
