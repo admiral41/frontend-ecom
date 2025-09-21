@@ -3,6 +3,7 @@ import "./globals.css";
 import { AppContextProvider } from "@/context/AppContext";
 import { Toaster } from "react-hot-toast";
 import Navbar from "@/components/Navbar";
+import NavTop from "@/components/NavTop";
 
 
 const outfit = Outfit({ subsets: ['latin'], weight: ["300", "400", "500"] })
@@ -19,6 +20,7 @@ export default function RootLayout({ children }) {
         <Toaster />
         <AppContextProvider>
           <header className='sticky top-0 z-50 w-full'>
+            <NavTop/>
             <Navbar />
           </header>
           {children}
